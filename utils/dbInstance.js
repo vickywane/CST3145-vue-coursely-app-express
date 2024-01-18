@@ -1,49 +1,28 @@
-const sequelize = require("sequelize");
+require('dotenv').config()
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const uri = process.env?.DB_CONNECTION_URL
 
-/**
- * Name of the database from the environment variables.
- * @type {string}
- */
-const DB_NAME = process.env.DB_NAME;
-
-/**
- * Username for the database from the environment variables.
- * @type {string}
- */
-const DB_USER = process.env.DB_USER;
-
-/**
- * Sequelize instance for database operations.
- * @type {import('sequelize').Sequelize}
- */
-const Sequelize = new sequelize(DB_NAME, DB_USER, "", {
-  dialect: "postgres",
-  define: {
-    freezeTableName: true,
-    timestamps: false
-  }
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  },
 });
 
-/**
- * Establishes a database connection using Sequelize.
- * @returns {Promise<import('sequelize').Sequelize>} - Promise resolving to a Sequelize instance.
- */
-const establishDBConnection = async () => {
+const dbClient = async () => {
   try {
-    await Sequelize.authenticate();
-  } catch (e) {
-    console.log(`Error connecting: ${e}`);
-  }
+    // await client.connect();
 
-  return Sequelize;
+    const database =  client.db(process?.env?.DATABASE_NAME)
+    await database.command({ ping: 1 });
+    console.log("Pinged MongoDB cluter... DB Connected!");
+
+    return database;
+  } catch (e) {
+    await client.close();
+    throw Error(`Error connecting to DB: ${e}`);
+  }
 };
 
-/**
- * Exports the Sequelize instance and the function to establish a database connection.
- * @module Database
- * @type {{
- *   sq: import('sequelize').Sequelize,
- *   establishDBConnection: () => Promise<import('sequelize').Sequelize>
- * }}
- */
-module.exports = { sq: Sequelize, establishDBConnection };
+module.exports = dbClient;

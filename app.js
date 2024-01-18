@@ -8,8 +8,8 @@ const bodyParser = require("body-parser");
 
 const dbInstance = require("./utils/dbInstance");
 
-const vehiclesRouter = require("./routes/vehicles");
-const userRoute = require("./routes/user");
+const lessonRoute = require("./routes/lesson");
+const orderRoute = require("./routes/order");
 
 const app = express();
 const PORT = process.env.PORT || 4040;
@@ -58,7 +58,8 @@ app.use(
 /**
  * Routes requests to the user for the root path.
  */
-app.use("/", userRoute);
+app.use("/", lessonRoute);
+app.use("/order", orderRoute);
 
 /**
  * Middleware handling 404 errors.
@@ -89,8 +90,7 @@ app.use(function (err, req, res, next) {
  * Establishes a connection to the database and starts the Express app.
  * @returns {Promise<void>} - Promise resolving to undefined.
  */
-dbInstance
-  .establishDBConnection()
+dbInstance()
   .then(() => {
     /**
      * Starts the Express app listening on the specified port.
