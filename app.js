@@ -2,12 +2,10 @@ require("dotenv").config();
 const createError = require("http-errors");
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const logger = require("morgan");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const dbInstance = require("./utils/dbInstance");
-
 const lessonRoute = require("./routes/lesson");
 const orderRoute = require("./routes/order");
 
@@ -23,11 +21,6 @@ app.use(bodyParser.json());
  * Sets up middleware for parsing URL-encoded bodies with extended options.
  */
 app.use(bodyParser.urlencoded({ extended: false }));
-
-/**
- * Sets up logger middleware for development.
- */
-app.use(logger("dev"));
 
 /**
  * Sets up middleware for parsing JSON bodies.
@@ -59,7 +52,7 @@ app.use(
  * Routes requests to the user for the root path.
  */
 app.use("/", lessonRoute);
-app.use("/order", orderRoute);
+app.use("/orders", orderRoute);
 
 /**
  * Middleware handling 404 errors.

@@ -9,14 +9,14 @@ router.get("/", async function (req, res, next) {
     const collection = dbInstance.collection("orders");
     const allOrders = await collection.find().toArray();
 
-    res.status(200).send({
+    return res.status(200).send({
       data: allOrders,
       totalItems: allOrders.length,
     });
   } catch (e) {
     console.log(e);
 
-    res.status(500).send({});
+   return  res.status(500).send({});
   }
 });
 
@@ -24,7 +24,7 @@ router.post("/", async function (req, res, next) {
   const { name, phoneNumber, lessonIds, spaceAmount } = req?.body;
 
   if (!name && !phoneNumber && !lessonIds && !spaceAmount) {
-    res.status(400).send({
+    return res.status(400).send({
       error: `request missing correct name, phoneNumber, lessonIds, spaceAmount fields`,
     });
   }
@@ -40,14 +40,14 @@ router.post("/", async function (req, res, next) {
       spaceAmount,
     });
 
-    res.status(200).send({
+    return res.status(200).send({
       data: allLessons,
       totalItems: allLessons.length,
     });
   } catch (e) {
     console.log(e);
 
-    res.status(500).send({});
+    return res.status(500).send({});
   }
 });
 
