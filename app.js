@@ -48,6 +48,12 @@ app.use(
   })
 );
 
+app.use(function (request, response, next) {
+  console.log(`[${new Date().toLocaleTimeString()}] Incoming Request: ${request.method} to ${request.url} endpoint`);
+  
+  next();
+});
+
 /**
  * Routes requests to the user for the root path.
  */
