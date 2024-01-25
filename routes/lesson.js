@@ -21,11 +21,20 @@ router.get("/lessons", async function (req, res, next) {
 });
 
 router.get("/lessons/search/:text", async function (req, res, next) {
+  const searchText = req?.params?.text;
+
   try {
     const dbInstance = await dbClient();
 
     const collection = dbInstance.collection("lessons");
-    const allLessons = await collection.find().toArray();
+
+    const allLessons = await collection
+      .find({
+        $text: {
+          $search: searchText
+        }
+      })
+      .toArray();
 
     res.status(200).send({
       data: allLessons,
@@ -40,7 +49,7 @@ router.get("/lessons/search/:text", async function (req, res, next) {
 
 router.put("/lessons/:id", async function (req, res, next) {
   const lessonId = req.params.id;
-  const availableSpaces = req.query.spacesLeft;
+  const availableSpaces = req.body.spaces;
 
   if (!availableSpaces) {
     res.status(400).send({ message: "missing: spacesLeft property" });
@@ -54,7 +63,7 @@ router.put("/lessons/:id", async function (req, res, next) {
       { _id: lessonId },
       {
         $set: {
-          spaces: 12,
+          spaces: availableSpaces,
         },
       },
       (err, doc) => {
