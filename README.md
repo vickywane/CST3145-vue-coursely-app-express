@@ -1,5 +1,5 @@
 # MDX Vue Course Node Service  
-
+-
 ## Text Search
 
 - Create index for partial text search using;
