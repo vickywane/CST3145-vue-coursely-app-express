@@ -6,3 +6,5 @@
 ```js
     await collection.createIndex({ topic: "text", location: "text", description: "text" })
 ```
+
+This project is deployed using ElasticBeanstalk!
